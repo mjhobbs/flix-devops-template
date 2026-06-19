@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8081:8081"
+    depends_on:
+      - gateway
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - video-service
+      - history-service
+
+  video-service:
+    build: ./services/video-service
+
+  history-service:
+    build: ./services/history-service
+
+  user-service:
+    build: ./services/user-service
