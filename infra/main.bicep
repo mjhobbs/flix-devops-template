@@ -17,13 +17,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   }
 }
 
-// App Service Plan (Free Tier)
+// App Service Plan (B1 Standard Linux tier)
 resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   name: 'plan-flix-${environment}'
   location: location
   kind: 'linux'
   sku: {
-    name: 'B1'
+    name: 'Standard_B1s'
     tier: 'Standard'
     capacity: 1
   }
