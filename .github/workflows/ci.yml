@@ -118,6 +118,7 @@ jobs:
                 repositoryName=${{ github.repository }} \
                 registryUsername=${{ github.actor }} \
                 registryPassword='${{ secrets.GITHUB_TOKEN }}'
+              --debug
 
       - name: Retrieve deployment outputs
         uses: azure/cli@v1
