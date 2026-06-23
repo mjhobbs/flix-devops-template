@@ -108,8 +108,10 @@ jobs:
         uses: azure/cli@v1
         with:
           inlineScript: |
+            DEPLOYMENT_NAME="flix-deploy-$(date +%s)"
+
             az deployment sub create \
-              --name flix-deploy-$(date +%s) \
+              --name "$DEPLOYMENT_NAME" \
               --location westus \
               --template-file infra/deploy.bicep \
               --parameters \
@@ -120,16 +122,12 @@ jobs:
                 registryPassword='${{ secrets.GITHUB_TOKEN }}' \
               --debug
 
-      - name: Retrieve deployment outputs
-        uses: azure/cli@v1
-        with:
-          inlineScript: |
             RG_NAME=$(az deployment sub show \
-              --name flix-deploy-$(date +%s) \
+              --name "$DEPLOYMENT_NAME" \
               --query properties.outputs.resourceGroupName.value -o tsv)
             echo "Resource Group: $RG_NAME"
             
             az container list \
-              --resource-group $RG_NAME \
+              --resource-group "$RG_NAME" \
               --query "[].{Name:name,Ip:ipAddress.ip,Fqdn:ipAddress.fqdn}" \
               --output table
