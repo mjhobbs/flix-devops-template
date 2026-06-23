@@ -5,6 +5,8 @@ param environment string = 'dev'
 param resourceGroupName string = 'rg-flix-${environment}'
 param containerRegistryUrl string = 'ghcr.io'
 param repositoryName string = 'mjhobbs/flix-devops-template'
+param registryUsername string = ''
+param registryPassword string = ''
 
 // Create resource group
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2023-07-01' = {
@@ -21,6 +23,8 @@ module containerInstances './main.bicep' = {
     environment: environment
     containerRegistryUrl: containerRegistryUrl
     repositoryName: repositoryName
+    registryUsername: registryUsername
+    registryPassword: registryPassword
   }
 }
 

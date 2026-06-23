@@ -2,6 +2,8 @@ param location string = 'westus'
 param environment string = 'dev'
 param containerRegistryUrl string = 'ghcr.io'
 param repositoryName string = 'mjhobbs/flix-devops-template'
+param registryUsername string = ''
+param registryPassword string = ''
 
 // Container Instances for microservices (no VM quota required)
 
@@ -47,7 +49,13 @@ resource frontendContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-
       ]
       dnsNameLabel: 'flix-frontend-${environment}-${uniqueString(resourceGroup().id)}'
     }
-    imageRegistryCredentials: []
+    imageRegistryCredentials: [
+      {
+        server: containerRegistryUrl
+        username: registryUsername
+        password: registryPassword
+      }
+    ]
     restartPolicy: 'Always'
   }
 }
@@ -94,7 +102,13 @@ resource gatewayContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-0
       ]
       dnsNameLabel: 'flix-gateway-${environment}-${uniqueString(resourceGroup().id)}'
     }
-    imageRegistryCredentials: []
+    imageRegistryCredentials: [
+      {
+        server: containerRegistryUrl
+        username: registryUsername
+        password: registryPassword
+      }
+    ]
     restartPolicy: 'Always'
   }
 }
@@ -141,7 +155,13 @@ resource videoServiceContainer 'Microsoft.ContainerInstance/containerGroups@2023
       ]
       dnsNameLabel: 'flix-video-${environment}-${uniqueString(resourceGroup().id)}'
     }
-    imageRegistryCredentials: []
+    imageRegistryCredentials: [
+      {
+        server: containerRegistryUrl
+        username: registryUsername
+        password: registryPassword
+      }
+    ]
     restartPolicy: 'Always'
   }
 }
@@ -188,7 +208,13 @@ resource historyServiceContainer 'Microsoft.ContainerInstance/containerGroups@20
       ]
       dnsNameLabel: 'flix-history-${environment}-${uniqueString(resourceGroup().id)}'
     }
-    imageRegistryCredentials: []
+    imageRegistryCredentials: [
+      {
+        server: containerRegistryUrl
+        username: registryUsername
+        password: registryPassword
+      }
+    ]
     restartPolicy: 'Always'
   }
 }
@@ -230,6 +256,12 @@ resource userServiceContainer 'Microsoft.ContainerInstance/containerGroups@2023-
       ports: [
         {
           port: 3002
+      {
+        server: containerRegistryUrl
+        username: registryUsername
+        password: registryPassword
+      }
+    
           protocol: 'TCP'
         }
       ]

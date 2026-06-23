@@ -115,7 +115,9 @@ jobs:
               --parameters \
                 environment=prod \
                 containerRegistryUrl=ghcr.io \
-                repositoryName=mjhobbs/flix-devops-template
+                repositoryName=${{ github.repository }} \
+                registryUsername=${{ github.actor }} \
+                registryPassword='${{ secrets.GITHUB_TOKEN }}'
 
       - name: Retrieve deployment outputs
         uses: azure/cli@v1
