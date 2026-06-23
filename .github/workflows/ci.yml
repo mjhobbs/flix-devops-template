@@ -104,7 +104,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy Bicep infrastructure
+      - name: Deploy Bicep infrastructure (Container Instances)
         uses: azure/cli@v1
         with:
           inlineScript: |
@@ -112,34 +112,21 @@ jobs:
               --name flix-deploy-$(date +%s) \
               --location westus \
               --template-file infra/deploy.bicep \
-              --parameters environment=prod
+              --parameters \
+                environment=prod \
+                containerRegistryUrl=ghcr.io \
+                repositoryName=mjhobbs/flix-devops-template
 
-      - name: Deploy frontend to App Service
-        uses: azure/webapps-deploy@v2
+      - name: Retrieve deployment outputs
+        uses: azure/cli@v1
         with:
-          app-name: app-flix-frontend-prod-${{ secrets.DEPLOYMENT_ID }}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:latest
-
-      - name: Deploy gateway to App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: app-flix-gateway-prod-${{ secrets.DEPLOYMENT_ID }}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/gateway:latest
-
-      - name: Deploy video-service to App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: app-flix-video-prod-${{ secrets.DEPLOYMENT_ID }}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/video-service:latest
-
-      - name: Deploy history-service to App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: app-flix-history-prod-${{ secrets.DEPLOYMENT_ID }}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/history-service:latest
-
-      - name: Deploy user-service to App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: app-flix-user-prod-${{ secrets.DEPLOYMENT_ID }}
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/user-service:latest
+          inlineScript: |
+            RG_NAME=$(az deployment sub show \
+              --name flix-deploy-$(date +%s) \
+              --query properties.outputs.resourceGroupName.value -o tsv)
+            echo "Resource Group: $RG_NAME"
+            
+            az container list \
+              --resource-group $RG_NAME \
+              --query "[].{Name:name,Ip:ipAddress.ip,Fqdn:ipAddress.fqdn}" \
+              --output table
