@@ -256,18 +256,18 @@ resource userServiceContainer 'Microsoft.ContainerInstance/containerGroups@2023-
       ports: [
         {
           port: 3002
-      {
-        server: containerRegistryUrl
-        username: registryUsername
-        password: registryPassword
-      }
-    
           protocol: 'TCP'
         }
       ]
       dnsNameLabel: 'flix-user-${environment}-${uniqueString(resourceGroup().id)}'
     }
-    imageRegistryCredentials: []
+     imageRegistryCredentials: [
+       {
+         server: containerRegistryUrl
+         username: registryUsername
+         password: registryPassword
+       }
+     ]
     restartPolicy: 'Always'
   }
 }
