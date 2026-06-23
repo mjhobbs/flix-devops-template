@@ -5,6 +5,11 @@ param repositoryName string = 'mjhobbs/flix-devops-template'
 param registryUsername string = ''
 param registryPassword string = ''
 
+var uniqueLabelSuffix = '${environment}-${uniqueString(resourceGroup().id)}'
+var containerDnsSuffix = '${location}.azurecontainer.io'
+var videoServiceUrl = 'http://flix-video-${uniqueLabelSuffix}.${containerDnsSuffix}:3000'
+var historyServiceUrl = 'http://flix-history-${uniqueLabelSuffix}.${containerDnsSuffix}:3001'
+
 // Container Instances for microservices (no VM quota required)
 
 // Frontend Container Instance
@@ -86,6 +91,14 @@ resource gatewayContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-0
             {
               name: 'PORT'
               value: '8080'
+            }
+            {
+              name: 'VIDEO_SERVICE_URL'
+              value: videoServiceUrl
+            }
+            {
+              name: 'HISTORY_SERVICE_URL'
+              value: historyServiceUrl
             }
           ]
         }
