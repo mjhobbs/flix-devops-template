@@ -117,7 +117,7 @@ jobs:
                 containerRegistryUrl=ghcr.io \
                 repositoryName=${{ github.repository }} \
                 registryUsername=${{ github.actor }} \
-                registryPassword='${{ secrets.GITHUB_TOKEN }}'
+                registryPassword='${{ secrets.GITHUB_TOKEN }}' \
               --debug
 
       - name: Retrieve deployment outputs

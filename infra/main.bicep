@@ -261,13 +261,13 @@ resource userServiceContainer 'Microsoft.ContainerInstance/containerGroups@2023-
       ]
       dnsNameLabel: 'flix-user-${environment}-${uniqueString(resourceGroup().id)}'
     }
-     imageRegistryCredentials: [
-       {
-         server: containerRegistryUrl
-         username: registryUsername
-         password: registryPassword
-       }
-     ]
+    imageRegistryCredentials: [
+      {
+        server: containerRegistryUrl
+        username: registryUsername
+        password: registryPassword
+      }
+    ]
     restartPolicy: 'Always'
   }
 }
